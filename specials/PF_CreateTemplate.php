@@ -116,14 +116,14 @@ class PFCreateTemplate extends SpecialPage {
 		$text .= "\t<p>" . '<label><input type="checkbox" name="is_list_' . $id . '" class="isList" /> ' . wfMessage( 'pf_createtemplate_fieldislist' )->escaped() . "</label>&nbsp;&nbsp;&nbsp;\n";
 		$text .= "\t" . '<label class="delimiter" style="display: none;">' . wfMessage( 'pf_createtemplate_delimiter' )->text() . ' ' .
 			Html::input( 'delimiter_' . $id, ',', 'text',
-				array( 'size' => '2' )
+				array( 'size' => '2', 'class' => 'createboxInput')
 			) . "</label>\n";
 		$text .= "\t</p>\n";
 		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>\n";
 			$text .= "\t<label>" . wfMessage( 'pf_createproperty_allowedvalsinput' )->escaped();
 			$text .= Html::input( 'allowed_values_' . $id, null, 'text',
-				array( 'size' => '80' ) ) . "</label>\n";
+				array( 'size' => '80', 'class' => 'createboxInput' ) ) . "</label>\n";
 			$text .= "\t</p>\n";
 		}
 		$text .= "\t</td><td>\n";
