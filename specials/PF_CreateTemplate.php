@@ -98,11 +98,11 @@ class PFCreateTemplate extends SpecialPage {
 		$text .= "\t<table style=\"width: 100%;\"><tr><td>\n";
 		$text .= "\t<p><label>" . wfMessage( 'pf_createtemplate_fieldname' )->escaped() . ' ' .
 			Html::input( 'name_' . $id, null, 'text',
-				array( 'size' => '15' )
+				array( 'size' => '15', 'class' => 'createboxInput' )
 			) . "</label>\n";
 		$text .= "\t<label>" . wfMessage( 'pf_createtemplate_displaylabel' )->escaped() . ' ' .
 			Html::input( 'label_' . $id, null, 'text',
-				array( 'size' => '15' )
+				array( 'size' => '15', 'class' => 'createboxInput' )
 			) . "</label>\n";
 		global $wgSite;
 		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
