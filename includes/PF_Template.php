@@ -484,7 +484,7 @@ END;
 				} else {
 					$tableText .= "| ";
 				}
-			} elseif ( $this->mTemplateFormat == 'section' ) {
+			} elseif ( $this->mTemplateFormat == 'infobox' ) {
 				if ( $fieldDisplay == 'hidden' ) {
 				} elseif ( $fieldDisplay == 'nonempty' ) {
 					//$tableText .= "{{!}} ";
