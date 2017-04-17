@@ -99,13 +99,13 @@ class PFCreateTemplate extends SpecialPage {
 		$text .= "\t<p><label>" . wfMessage( 'pf_createtemplate_fieldname' )->escaped() . ' ' .
 			Html::input( 'name_' . $id, null, 'text',
 				array( 'size' => '15' )
-			) . "</label>&nbsp;&nbsp;&nbsp;\n";
+			) . "</label>\n";
 		$text .= "\t<label>" . wfMessage( 'pf_createtemplate_displaylabel' )->escaped() . ' ' .
 			Html::input( 'label_' . $id, null, 'text',
 				array( 'size' => '15' )
-			) . "</label>&nbsp;&nbsp;&nbsp;\n";
+			) . "</label>\n";
 		global $wgSite;
-		if ( $wgSite->getProperty('enable-semantic-mediawiki') == 1 ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$dropdown_html = self::printPropertiesComboBox( $all_properties, $id );
 			$text .= "\t<label>" . wfMessage( 'pf_createtemplate_semanticproperty' )->escaped() . ' ' . $dropdown_html . "</label></p>\n";
 		} elseif ( defined( 'CARGO_VERSION' ) ) {
@@ -119,7 +119,7 @@ class PFCreateTemplate extends SpecialPage {
 				array( 'size' => '2' )
 			) . "</label>\n";
 		$text .= "\t</p>\n";
-		if ( $wgSite->getProperty('enable-semantic-mediawiki') != 1 && defined( 'CARGO_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>\n";
 			$text .= "\t<label>" . wfMessage( 'pf_createproperty_allowedvalsinput' )->escaped();
 			$text .= Html::input( 'allowed_values_' . $id, null, 'text',
@@ -127,7 +127,7 @@ class PFCreateTemplate extends SpecialPage {
 			$text .= "\t</p>\n";
 		}
 		$text .= "\t</td><td>\n";
-		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField" />' . "\n";
+		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField cross-symbol" />' . "\n";
 
 		$text .= <<<END
 </td></tr></table>
