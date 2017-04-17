@@ -450,7 +450,8 @@ END;
 				} elseif ( $this->mTemplateFormat == 'sections' ) {
 					$tableText .= "\n==" . $fieldLabel . "==\n";
 				} elseif ( $this->meTemplateFormat == 'infobox' ) {
-					$tableText .= "|label($i+1) " . $fieldLabel . "\n";
+					$r = $i + 1;
+					$tableText .= "|label{$r} " . $fieldLabel . "\n";
 				}
 			} elseif ( $fieldDisplay == 'nonempty' ) {
 				if ( $this->mTemplateFormat == 'plain' || $this->mTemplateFormat == 'sections' ) {
@@ -470,8 +471,9 @@ END;
 					$tableText .= '==' . $fieldLabel . "==\n";
 					$separator = '';
 				} elseif ( $this->mTemplateFormat == 'infobox' ) {
-					$tableText .= "|label{$i+1}=" . $fieldLabel . "\n";
-					$separator = "|data{$i+1}= ";
+					$r = $i + 1;
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n";
+					$separator = "|data{$r}= ";
 				}
 			} // If it's 'hidden', do nothing
 			// Value column
