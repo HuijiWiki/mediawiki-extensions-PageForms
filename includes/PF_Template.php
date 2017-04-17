@@ -451,7 +451,7 @@ END;
 					$tableText .= "\n==" . $fieldLabel . "==\n";
 				} elseif ( $this->meTemplateFormat == 'infobox' ) {
 					$r = $i + 1;
-					$tableText .= "|label{$r} " . $fieldLabel . "\n";
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n";
 				}
 			} elseif ( $fieldDisplay == 'nonempty' ) {
 				if ( $this->mTemplateFormat == 'plain' || $this->mTemplateFormat == 'sections' ) {
@@ -484,7 +484,15 @@ END;
 				} else {
 					$tableText .= "| ";
 				}
-			} 
+			} elseif ( $this->mTemplateFormat == 'section' ) {
+				if ( $fieldDisplay == 'hidden' ) {
+				} elseif ( $fieldDisplay == 'nonempty' ) {
+					//$tableText .= "{{!}} ";
+				} else {
+					$r = $i + 1;
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n|data{$r}= ";
+				}				
+			}
 
 			// If we're using Cargo, fields can simply be displayed
 			// normally - no need for any special tags - *unless*
