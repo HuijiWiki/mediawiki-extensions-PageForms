@@ -104,8 +104,8 @@ class PFCreateTemplate extends SpecialPage {
 			Html::input( 'label_' . $id, null, 'text',
 				array( 'size' => '15' )
 			) . "</label>&nbsp;&nbsp;&nbsp;\n";
-
-		if ( defined( 'SMW_VERSION' ) ) {
+		global $wgSite;
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') == 1 ) {
 			$dropdown_html = self::printPropertiesComboBox( $all_properties, $id );
 			$text .= "\t<label>" . wfMessage( 'pf_createtemplate_semanticproperty' )->escaped() . ' ' . $dropdown_html . "</label></p>\n";
 		} elseif ( defined( 'CARGO_VERSION' ) ) {
@@ -119,7 +119,7 @@ class PFCreateTemplate extends SpecialPage {
 				array( 'size' => '2' )
 			) . "</label>\n";
 		$text .= "\t</p>\n";
-		if ( !defined( 'SMW_VERSION' ) && defined( 'CARGO_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') != 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>\n";
 			$text .= "\t<label>" . wfMessage( 'pf_createproperty_allowedvalsinput' )->escaped();
 			$text .= Html::input( 'allowed_values_' . $id, null, 'text',

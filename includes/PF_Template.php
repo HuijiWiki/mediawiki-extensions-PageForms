@@ -426,9 +426,7 @@ END;
 			// MediaWiki setups don't have an 'infobox' or
 			// comparable CSS class.
 			$tableText = <<<END
-{| style="width: 30em; font-size: 90%; border: 1px solid #aaaaaa; background-color: #f9f9f9; color: black; margin-bottom: 0.5em; margin-left: 1em; padding: 0.2em; float: right; clear: right; text-align:left;"
-! style="text-align: center; background-color:#ccccff;" colspan="2" |<span style="font-size: larger;">{{PAGENAME}}</span>
-|-
+{{infobox
 
 END;
 		} else {
@@ -461,7 +459,7 @@ END;
 
 			// Header/field label column
 			if ( is_null( $fieldDisplay ) ) {
-				if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+				if ( $this->mTemplateFormat == 'standard' ) {
 					if ( $i > 0 ) {
 						$tableText .= "|-\n";
 					}
@@ -470,13 +468,15 @@ END;
 					$tableText .= "\n'''" . $fieldLabel . ":''' ";
 				} elseif ( $this->mTemplateFormat == 'sections' ) {
 					$tableText .= "\n==" . $fieldLabel . "==\n";
+				} elseif ( $this->meTemplateFormat == 'infobox' ) {
+					$tableText .= "| " . $fieldLabel . "\n";
 				}
 			} elseif ( $fieldDisplay == 'nonempty' ) {
 				if ( $this->mTemplateFormat == 'plain' || $this->mTemplateFormat == 'sections' ) {
 					$tableText .= "\n";
 				}
 				$tableText .= '{{#if:' . $fieldParam . '|';
-				if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+				if ( $this->mTemplateFormat == 'standard' ) {
 					if ( $i > 0 ) {
 						$tableText .= "\n{{!}}-\n";
 					}
@@ -488,6 +488,12 @@ END;
 				} elseif ( $this->mTemplateFormat == 'sections' ) {
 					$tableText .= '==' . $fieldLabel . "==\n";
 					$separator = '';
+				} elseif ( $this->mTemplateFormat == 'infobox' ) {
+					if ( $i > 0 ) {
+						$tableText .= "\n|";
+					}
+					$tableText .= '|' . $fieldLabel . "\n";
+					$separator = '|';
 				}
 			} // If it's 'hidden', do nothing
 			// Value column
@@ -552,7 +558,7 @@ END;
 					$setText .= $fieldProperty . '=' . $fieldString . '|';
 				}
 			} elseif ( $fieldDisplay == 'nonempty' ) {
-				if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+				if ( $this->mTemplateFormat == 'standard'  ) {
 					$tableText .= '{{!}} ';
 				}
 				if ( $fieldStart != '' ) {
@@ -610,7 +616,7 @@ END;
 		// Add an inline query to the output text, for
 		// aggregation, if a property was specified.
 		if ( !is_null( $this->mAggregatingProperty ) && $this->mAggregatingProperty !== '' ) {
-			if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+			if ( $this->mTemplateFormat == 'standard' ) {
 				if ( count( $this->mTemplateFields ) > 0 ) {
 					$tableText .= "|-\n";
 				}
@@ -622,11 +628,15 @@ END;
 				$tableText .= "\n'''" . $this->mAggregationLabel . ":''' ";
 			} elseif ( $this->mTemplateFormat == 'sections' ) {
 				$tableText .= "\n==" . $this->mAggregationLabel . "==\n";
+			} elseif ( $this->mTemplateFormat == 'infobox' ) {
+				$tableText .= "|" . $this->mAggregationLabel . "\n";
 			}
 			$tableText .= "{{#ask:[[" . $this->mAggregatingProperty . "::{{SUBJECTPAGENAME}}]]|format=list}}\n";
 		}
-		if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+		if ( $this->mTemplateFormat == 'standard' ) {
 			$tableText .= "|}";
+		} elseif ( $this->mTemplateFormat == 'infobox' ) {
+			$tableText .= "}}";
 		}
 		// Leave out newlines if there's an internal property
 		// set here (which would mean that there are meant to be
