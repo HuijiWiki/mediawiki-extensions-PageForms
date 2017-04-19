@@ -469,7 +469,8 @@ END;
 				} elseif ( $this->mTemplateFormat == 'sections' ) {
 					$tableText .= "\n==" . $fieldLabel . "==\n";
 				} elseif ( $this->meTemplateFormat == 'infobox' ) {
-					$tableText .= "| " . $fieldLabel . "\n";
+					$r = $i + 1;
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n";
 				}
 			} elseif ( $fieldDisplay == 'nonempty' ) {
 				if ( $this->mTemplateFormat == 'plain' || $this->mTemplateFormat == 'sections' ) {
@@ -489,21 +490,27 @@ END;
 					$tableText .= '==' . $fieldLabel . "==\n";
 					$separator = '';
 				} elseif ( $this->mTemplateFormat == 'infobox' ) {
-					if ( $i > 0 ) {
-						$tableText .= "\n|";
-					}
-					$tableText .= '|' . $fieldLabel . "\n";
-					$separator = '|';
+					$r = $i + 1;
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n";
+					$separator = "|data{$r}= ";
 				}
 			} // If it's 'hidden', do nothing
 			// Value column
-			if ( $this->mTemplateFormat == 'standard' || $this->mTemplateFormat == 'infobox' ) {
+			if ( $this->mTemplateFormat == 'standard' ) {
 				if ( $fieldDisplay == 'hidden' ) {
 				} elseif ( $fieldDisplay == 'nonempty' ) {
 					//$tableText .= "{{!}} ";
 				} else {
 					$tableText .= "| ";
 				}
+			} elseif ( $this->mTemplateFormat == 'infobox' ) {
+				if ( $fieldDisplay == 'hidden' ) {
+				} elseif ( $fieldDisplay == 'nonempty' ) {
+					//$tableText .= "{{!}} ";
+				} else {
+					$r = $i + 1;
+					$tableText .= "|label{$r}= " . $fieldLabel . "\n|data{$r}= ";
+				}				
 			}
 
 			// If we're using Cargo, fields can simply be displayed
@@ -629,7 +636,8 @@ END;
 			} elseif ( $this->mTemplateFormat == 'sections' ) {
 				$tableText .= "\n==" . $this->mAggregationLabel . "==\n";
 			} elseif ( $this->mTemplateFormat == 'infobox' ) {
-				$tableText .= "|" . $this->mAggregationLabel . "\n";
+				$x = $count( $this->mTemplateFields ) + 1;
+				$tableText .= "|label{$x}= " . $this->mAggregationLabel . "\n|data{$x}= ";
 			}
 			$tableText .= "{{#ask:[[" . $this->mAggregatingProperty . "::{{SUBJECTPAGENAME}}]]|format=list}}\n";
 		}

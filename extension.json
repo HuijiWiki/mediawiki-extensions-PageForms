@@ -429,10 +429,7 @@
 		]
 	},
 	"config": {
-<<<<<<< HEAD
 		"PageFormsUseDisplayTitle": false,
-=======
->>>>>>> 34f1d8e2a2a69d12486ba3fc1fc5edcdb478bef9
 		"PageFormsMaxAutocompleteValues": 1000,
 		"PageFormsMaxLocalAutocompleteValues": 100,
 		"PageFormsAutocompleteOnAllChars": false,
@@ -445,10 +442,6 @@
 		"PageFormsCacheFormDefinitions": false,
 		"PageFormsFormCacheType": null,
 		"PageFormsLinkAllRedLinksToForms": false,
-<<<<<<< HEAD
-=======
-		"PageFormsRedLinksCheckOnlyLocalProps": false,
->>>>>>> 34f1d8e2a2a69d12486ba3fc1fc5edcdb478bef9
 		"PageFormsShowTabsForAllHelperForms": true,
 		"PageFormsRunQueryFormAtTop": false,
 		"PageFormsGoogleMapsKey": null,
@@ -466,12 +459,6 @@
 			"LastDate": null,
 			"DateFormat": "SHORT",
 			"WeekStart": null,
-<<<<<<< HEAD
-=======
-			"ShowWeekNumbers": false,
-			"DisableInputField": false,
-			"ShowResetButton": false,
->>>>>>> 34f1d8e2a2a69d12486ba3fc1fc5edcdb478bef9
 			"DisabledDaysOfWeek": null,
 			"HighlightedDaysOfWeek": null,
 			"DisabledDates": null,
@@ -480,8 +467,4 @@
 		}
 	},
 	"manifest_version": 1
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 34f1d8e2a2a69d12486ba3fc1fc5edcdb478bef9
