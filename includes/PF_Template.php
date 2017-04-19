@@ -427,6 +427,8 @@ END;
 			// comparable CSS class.
 			$tableText = <<<END
 {{infobox
+|title={{PAGENAME}}
+|image=[[File:{{{image|Infobox-image-placeholder.jpg}}}|300px]]
 
 END;
 		} else {
