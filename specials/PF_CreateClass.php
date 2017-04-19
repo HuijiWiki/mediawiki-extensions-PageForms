@@ -180,7 +180,7 @@ class PFCreateClass extends SpecialPage {
 			return;
 		}
 
-		$specialBGColor = '#eeffcc';
+		$specialBGColor = 'lighten';
 		if ( defined( 'SMW_VERSION' ) ) {
 			$possibleTypes = $smwgContLang->getDatatypeLabels();
 		} elseif ( defined( 'CARGO_VERSION' ) ) {
@@ -254,7 +254,7 @@ END;
 			$text .= <<<END
 		<tr>
 			<th colspan="3" />
-			<th colspan="3" style="background: #ddeebb; padding: 4px;">$property_label</th>
+			<th colspan="3" class="darken" style="padding: 4px;">$property_label</th>
 		</tr>
 
 END;
@@ -271,7 +271,7 @@ END;
 		if ( defined( 'SMW_VERSION' ) ) {
 			$property_name_label = wfMessage( 'pf_createproperty_propname' )->escaped();
 			$text .= <<<END
-			<th style="background: $specialBGColor; padding: 4px;">$property_name_label</th>
+			<th class="$specialBGColor" style="padding: 4px;">$property_name_label</th>
 
 END;
 		}
@@ -279,8 +279,8 @@ END;
 		$type_label = wfMessage( 'pf_createproperty_proptype' )->escaped();
 		$allowed_values_label = wfMessage( 'pf_createclass_allowedvalues' )->escaped();
 		$text .= <<<END
-			<th style="background: $specialBGColor; padding: 4px;">$type_label</th>
-			<th style="background: $specialBGColor; padding: 4px;">$allowed_values_label</th>
+			<th class="$specialBGColor" style="padding: 4px;">$type_label</th>
+			<th class="$specialBGColor" style="padding: 4px;">$allowed_values_label</th>
 		</tr>
 
 END;
@@ -304,12 +304,12 @@ END;
 END;
 		if ( defined( 'SMW_VERSION' ) ) {
 			$text .= <<<END
-			<td style="background: $specialBGColor; padding: 4px;"><input type="text" size="25" name="property_name_$n" /></td>
+			<td class="$specialBGColor" style="padding: 4px;"><input type="text" size="25" name="property_name_$n" /></td>
 
 END;
 		}
 		$text .= <<<END
-			<td style="background: $specialBGColor; padding: 4px;">
+			<td class="$specialBGColor" style="padding: 4px;">
 
 END;
 			$typeDropdownBody = '';
@@ -319,7 +319,7 @@ END;
 			$text .= "\t\t\t\t" . Html::rawElement( 'select', array( 'name' => "property_type_$n" ), $typeDropdownBody ) . "\n";
 			$text .= <<<END
 			</td>
-			<td style="background: $specialBGColor; padding: 4px;"><input type="text" size="25" name="allowed_values_$n" /></td>
+			<td class="$specialBGColor" style="padding: 4px;"><input type="text" size="25" name="allowed_values_$n" /></td>
 
 END;
 		}
