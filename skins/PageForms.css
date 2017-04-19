@@ -37,13 +37,14 @@ textarea.mandatoryField {
 }/* 加well */
 
 /* deleteField button 创建模板页的删除按钮，内容改成× */
-input.cross-simbol {
-    background: transparent;
+input.deleteField {
+    font-size: 26px;
+    line-height: 24px;
     border: 0;
-    font-size: 2em;
-}
+    width: 26px;
+}/* 为了避免well的颜色和×颜色太相近，去掉mw-ui-button，加上btn-danger */
 .fieldBox td:last-child{
-    width: 30px;
+    width: 26px;
     vertical-align: top;
 }
 	
