@@ -22,6 +22,7 @@ class PFFormPrinter {
 	public $mPageTitle;
 
 	public function __construct() {
+		global $wgPageFormsDisableOutsideServices;
 		// Initialize variables.
 		$this->mSemanticTypeHooks = array();
 		$this->mCargoTypeHooks = array();
@@ -59,10 +60,12 @@ class PFFormPrinter {
 		$this->registerInputType( 'PFRatingInput' );
 		// Add this if the Semantic Maps extension is not
 		// included, or if it's SM (really Maps) v4.0 or higher.
-		if ( !defined( 'SM_VERSION' ) || version_compare( SM_VERSION, '4.0', '>=' ) ) {
-			$this->registerInputType( 'PFGoogleMapsInput' );
+		if( !$wgPageFormsDisableOutsideServices ) {
+			if ( !defined( 'SM_VERSION' ) || version_compare( SM_VERSION, '4.0', '>=' ) ) {
+				$this->registerInputType( 'PFGoogleMapsInput' );
+			}
+			$this->registerInputType( 'PFOpenLayersInput' );
 		}
-		$this->registerInputType( 'PFOpenLayersInput' );
 
 		// All-purpose setup hook.
 		Hooks::run( 'PageForms::FormPrinterSetup', array( $this ) );
@@ -335,7 +338,14 @@ END;
 		// case- and spacing-insensitive.
 		// Also, keeping the "id=" attribute should not be
 		// necessary; but currently it is, for "show on select".
-		$section = preg_replace( '/ id="(.*?)"/', ' id="$1" data-origID="$1" ', $section );
+		$section = preg_replace_callback(
+			'/ id="(.*?)"/',
+			function ( $matches ) {
+				$id = htmlspecialchars( $matches[1], ENT_QUOTES );
+				return " id=\"$id\" data-origID=\"$id\" ";
+			},
+			$section
+		);
 
 		$text = "\t\t" . Html::rawElement( 'div',
 				array(
@@ -782,14 +792,9 @@ END;
 		$section_start = 0;
 		$free_text_was_included = false;
 		$preloaded_free_text = null;
-		// Unencode any HTML-encoded representations of curly brackets and
-		// pipes - this is a hack to allow for forms to include templates
-		// that themselves contain form elements - the escaping was needed
-		// to make sure that those elements don't get parsed too early.
-		$form_def = str_replace( array( '&#123;', '&#124;', '&#125;' ), array( '{', '|', '}' ), $form_def );
-		// And another hack - replace the 'free text' standard input
-		// with a field declaration to get it to be handled as a field.
-		$form_def = str_replace( 'standard input|free text', 'field|<freetext>', $form_def );
+		// @HACK - replace the 'free text' standard input with a
+		// field declaration to get it to be handled as a field.
+		$form_def = str_replace( 'standard input|free text', 'field|"freetext"', $form_def );
 		while ( $brackets_loc = strpos( $form_def, "{{{", $start_position ) ) {
 			$brackets_end_loc = strpos( $form_def, "}}}", $brackets_loc );
 			$bracketed_string = substr( $form_def, $brackets_loc + 3, $brackets_end_loc - ( $brackets_loc + 3 ) );
@@ -918,7 +923,7 @@ END;
 					// We get the field name both here
 					// and in the PFFormField constructor,
 					// because PFFormField isn't equipped
-					// to deal with the <freetext> hack,
+					// to deal with the "freetext" hack,
 					// among others.
 					$field_name = trim( $tag_components[1] );
 					$form_field = PFFormField::newFromFormFieldTag( $tag_components, $template, $tif, $form_is_disabled );
@@ -962,7 +967,7 @@ END;
 					}
 
 					// Handle the free text field.
-					if ( $field_name == '<freetext>' ) {
+					if ( $field_name == '"freetext"' ) {
 						// If there was no preloading, this will just be blank.
 						$preloaded_free_text = $cur_value;
 						// Add placeholders for the free text in both the form and
@@ -995,7 +1000,7 @@ END;
 						$wiki_page->addFreeTextSection();
 					}
 
-					if ( $tif->getTemplateName() === '' || $field_name == '<freetext>' ) {
+					if ( $tif->getTemplateName() === '' || $field_name == '"freetext"' ) {
 						$section = substr_replace( $section, $new_text, $brackets_loc, $brackets_end_loc + 3 - $brackets_loc );
 					} else {
 						if ( is_array( $cur_value ) ) {
@@ -1336,9 +1341,10 @@ END;
 				// =====================================================
 				// default outer level processing
 				// =====================================================
-				} else { // Tag is not one of the three allowed values -
-					// ignore the tag.
-					$start_position = $brackets_end_loc;
+				} else { // Tag is not one of the allowed values -
+					// ignore it, other than to HTML-escape it.
+					$form_section_text = htmlspecialchars( substr( $section, $brackets_loc, $brackets_end_loc + 3 - $brackets_loc ) );
+					$section = substr_replace( $section, $form_section_text, $brackets_loc, $brackets_end_loc + 3 - $brackets_loc );
 				} // end if
 			} // end while
 
@@ -1505,7 +1511,7 @@ END;
 			$this->mPageTitle->exists() && $existing_page_content !== ''
 			&& !$source_page_matches_this_form ) {
 			$form_text = "\t" . '<div class="warningbox">' .
-				wfMessage( 'pf_formedit_formwarning', $this->mPageTitle->getFullURL() )->text() .
+				wfMessage( 'pf_formedit_formwarning', $page_name )->parse() .
 				"</div>\n<br clear=\"both\" />\n" . $form_text;
 		}
 
