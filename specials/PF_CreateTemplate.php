@@ -127,7 +127,7 @@ class PFCreateTemplate extends SpecialPage {
 			$text .= "\t</p>\n";
 		}
 		$text .= "\t</td><td>\n";
-		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField cross-symbol" />' . "\n";
+		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField btn-danger" />' . "\n";
 
 		$text .= <<<END
 </td></tr></table>
