@@ -434,6 +434,12 @@ END;
 		} else {
 			$tableText = '';
 		}
+		$templateData = <<<END
+<templatedata>
+{
+	"params": {
+		
+END;
 
 		foreach ( $this->mTemplateFields as $i => $field ) {
 			if ( $field->getFieldName() == '' ) continue;
@@ -458,6 +464,13 @@ END;
 			$fieldDisplay = $field->getDisplay();
 			$fieldProperty = $field->getSemanticProperty();
 			$fieldIsList = $field->isList();
+			
+			$templateData .= <<<END
+		"$fieldLabel": {
+			"suggested": true
+		},
+
+END;
 
 			// Header/field label column
 			if ( is_null( $fieldDisplay ) ) {
@@ -677,8 +690,19 @@ END;
 		// After text
 		$text .= $this->mTemplateEnd;
 
-		$text .= "</includeonly>\n";
+		$text .= <<<END
+</includeonly>
+$templateData
+		"image": {
+			"suggested": true,
+			"example": "placeholder.jpg",
+			"type": "wiki-file-name"
+		}
+	}
+}
+</templatedata>
 
+END;
 		return $text;
 	}
 }
