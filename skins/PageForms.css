@@ -42,6 +42,8 @@ input.deleteField {
     line-height: 24px;
     border: 0;
     width: 26px;
+	min-width: auto;
+    padding: 0;
 }/* 为了避免well的颜色和×颜色太相近，去掉mw-ui-button，加上btn-danger */
 .fieldBox td:last-child{
     width: 26px;
