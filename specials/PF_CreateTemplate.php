@@ -112,13 +112,14 @@ class PFCreateTemplate extends SpecialPage {
 			$dropdown_html = self::printFieldTypeDropdown( $id );
 			$text .= "\t<label>" . wfMessage( 'pf_createproperty_proptype' )->escaped() . ' ' . $dropdown_html . "</label></p>\n";
 		}
-
-		$text .= "\t<p>" . '<label><input type="checkbox" name="is_list_' . $id . '" class="isList" /> ' . wfMessage( 'pf_createtemplate_fieldislist' )->escaped() . "</label>&nbsp;&nbsp;&nbsp;\n";
-		$text .= "\t" . '<label class="delimiter" style="display: none;">' . wfMessage( 'pf_createtemplate_delimiter' )->escaped() . ' ' .
-			Html::input( 'delimiter_' . $id, ',', 'text',
-				array( 'size' => '2', 'class' => 'createboxInput')
-			) . "</label>\n";
-		$text .= "\t</p>\n";
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 || defined( 'CARGO_VERSION' )) {
+			$text .= "\t<p>" . '<label><input type="checkbox" name="is_list_' . $id . '" class="isList" /> ' . wfMessage( 'pf_createtemplate_fieldislist' )->escaped() . "</label>&nbsp;&nbsp;&nbsp;\n";
+			$text .= "\t" . '<label class="delimiter" style="display: none;">' . wfMessage( 'pf_createtemplate_delimiter' )->escaped() . ' ' .
+				Html::input( 'delimiter_' . $id, ',', 'text',
+					array( 'size' => '2', 'class' => 'createboxInput')
+				) . "</label>\n";
+			$text .= "\t</p>\n";
+		}
 		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>\n";
 			$text .= "\t<label>" . wfMessage( 'pf_createproperty_allowedvalsinput' )->escaped();
@@ -158,6 +159,7 @@ END;
 	}
 
 	function printCreateTemplateForm( $query ) {
+		global $wgSite;
 		$out = $this->getOutput();
 		$req = $this->getRequest();
 
@@ -236,7 +238,7 @@ END;
 			$text .= "\t<p id=\"template_name_p\">" . wfMessage( 'pf_createtemplate_namelabel' )->escaped() . ' <input size="25" id="template_name" name="template_name" /></p>' . "\n";
 		}
 		$text .= "\t<p>" . wfMessage( 'pf_createtemplate_categorylabel' )->escaped() . ' <input size="25" name="category" /></p>' . "\n";
-		if ( !defined( 'SMW_VERSION' ) && defined( 'CARGO_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>" . wfMessage( 'pf_createtemplate_cargotablelabel' )->escaped() . ' <input size="25" name="cargo_table" /></p>' . "\n";
 		}
 
@@ -244,7 +246,7 @@ END;
 		$text .= "\t" . Html::element( 'legend', null, wfMessage( 'pf_createtemplate_templatefields' )->text() ) . "\n";
 		$text .= "\t" . Html::element( 'p', null, wfMessage( 'pf_createtemplate_fieldsdesc' )->text() ) . "\n";
 
-		if ( defined( 'SMW_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$all_properties = self::getAllPropertyNames();
 		} else {
 			$all_properties = array();
@@ -262,8 +264,8 @@ END;
 		);
 		$text .= Html::rawElement( 'p', null, $add_field_button ) . "\n";
 		$text .= "\t</fieldset>\n";
-
-		if ( defined( 'SMW_VERSION' ) ) {
+		
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$text .= "\t<fieldset>\n";
 			$text .= "\t" . Html::element( 'legend', null, wfMessage( 'pf_createtemplate_aggregation' )->text() ) . "\n";
 			$text .= "\t" . Html::element( 'p', null, wfMessage( 'pf_createtemplate_aggregationdesc' )->text() ) . "\n";
