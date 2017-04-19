@@ -691,7 +691,7 @@ END;
 
 			// 3 values per row, with alternating colors for rows
 			if ( $i % 3 == 0 ) {
-				$bgcolor = ( $i % 6 ) == 0 ? 'well' : '';
+				$bgcolor = ( $i % 6 ) == 0 ? 'lighten' : '';
 				$text .= "<div class=\"$bgcolor\">";
 			}
 
@@ -737,7 +737,7 @@ END;
 
 			// 3 values per row, with alternating colors for rows
 			if ( $i % 3 == 0 ) {
-				$bgcolor = ( $i % 6 ) == 0 ? 'well' : '';
+				$bgcolor = ( $i % 6 ) == 0 ? 'lighten' : '';
 				$text .= "<div class=\"$bgcolor\">";
 			}
 
