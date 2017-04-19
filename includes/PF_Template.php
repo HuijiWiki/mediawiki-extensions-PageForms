@@ -438,7 +438,7 @@ END;
 <templatedata>
 {
 	"params": {
-		
+
 END;
 
 		foreach ( $this->mTemplateFields as $i => $field ) {
@@ -692,8 +692,7 @@ END;
 
 		$text .= <<<END
 </includeonly>
-$templateData
-		"image": {
+$templateData   		"image": {
 			"suggested": true,
 			"example": "placeholder.jpg",
 			"type": "wiki-file-name"
