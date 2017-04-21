@@ -692,7 +692,7 @@ END;
 
 		$text .= <<<END
 </includeonly>
-</noinclude>
+<noinclude>
 $templateData   		"image": {
 			"suggested": true,
 			"example": "placeholder.jpg",
