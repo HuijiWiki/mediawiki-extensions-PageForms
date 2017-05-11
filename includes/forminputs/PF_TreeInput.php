@@ -77,12 +77,12 @@ class PFTreeInput extends PFFormInput {
 
 		$cur_values = PFValuesUtils::getValuesArray( $cur_value, $delimiter );
 		if ( array_key_exists( 'height', $other_args ) ) {
-			$height = $other_args['height'];
+			$height = Sanitizer::checkCSS( $other_args['height'] );
 		} else {
 			$height = '100';
 		}
 		if ( array_key_exists( 'width', $other_args ) ) {
-			$width = $other_args['width'];
+			$width = Sanitizer::checkCSS( $other_args['width'] );
 		} else {
 			$width = '500';
 		}
@@ -159,33 +159,28 @@ class PFTreeInput extends PFFormInput {
 	}
 
 	private static function nodeToHTML( $node, $key_prefix, $input_name, $current_selection, $hidenode, $depth, $inputType, $index = 1 ) {
-		global $wgPageFormsTabIndex, $wgPageFormsFieldNum;
-
-		$input_id = "input_$wgPageFormsFieldNum";
-		// HTML IDs can't contain spaces.
-		$key_id = str_replace( ' ', '-', "$key_prefix-$index" );
-		$dataItems = array();
-		$li_data = "";
-		if ( in_array( $node->title, $current_selection ) ) {
-			$li_data .= 'class="selected" ';
-		}
-
-		if ( $depth > 0 ) {
-			$dataItems[] = "'expand': true";
-		}
-
-		if ( $dataItems ) {
-			$li_data .= "data=\"" . implode(",", $dataItems) . "\" ";
-		}
+		global $wgPageFormsTabIndex;
 
 		$text = '';
+
+		// HTML IDs can't contain spaces.
+		$key_id = str_replace( ' ', '-', "$key_prefix-$index" );
+
 		if ( !$hidenode ) {
+			$liAttribs = array( 'id' => $key_id );
+			if ( in_array( $node->title, $current_selection ) ) {
+				$liAttribs['class'] = 'selected';
+			}
+			if ( $depth > 0 ) {
+				$liAttribs['data'] = "'expand': true";
+			}
+			// For some reason, the Dynatree JS library requires
+			// unclosed <li> tags; "<li>...</li>" won't work.
+			$text .= Html::openElement( 'li', $liAttribs );
+
 			$dummy_str = "REPLACE THIS TEXT";
-			$text .= "<li id=\"$key_id\" $li_data>";
-			if ( self::$multipleSelect) {
-				$inputName = $input_name . "[" . $dummy_str . "]";
-			} else {
-				$inputName = $input_name;
+			if ( self::$multipleSelect ) {
+				$input_name .= "[" . $dummy_str . "]";
 			}
 			$nodeAttribs = array(
 				'tabindex' => $wgPageFormsTabIndex,
@@ -195,9 +190,12 @@ class PFTreeInput extends PFFormInput {
 			if ( in_array( $node->title, $current_selection ) ) {
 				$nodeAttribs['checked'] = true;
 			}
-			$text .= Html::input( $inputName, $node->title, $inputType, $nodeAttribs );
+
+			$text .= Html::input( $input_name, $node->title, $inputType, $nodeAttribs );
+
 			$text .= $node->title . "\n";
 		}
+
 		if ( array_key_exists( 'children', $node ) ) {
 			$text .= "<ul>\n";
 			$i = 1;
@@ -206,6 +204,7 @@ class PFTreeInput extends PFFormInput {
 			}
 			$text .= "</ul>\n";
 		}
+
 		return $text;
 	}
 
