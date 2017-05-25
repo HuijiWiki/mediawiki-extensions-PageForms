@@ -3,7 +3,7 @@
  */
 
 /* Override "width: 100%" setting in standard MediaWiki skins 盖写mw-ui-input */
-.createboxInput {
+#mw-content-text .createboxInput {
     border: 0 !important;
     border-radius: 0 !important;
     margin-bottom: 8px;
