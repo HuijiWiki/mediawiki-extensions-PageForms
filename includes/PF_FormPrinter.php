@@ -1279,7 +1279,10 @@ END;
 					if ( ( ! $source_is_page ) && $wgRequest ) {
 						$text_per_section = $wgRequest->getArray( '_section' );
 						$section_text = $text_per_section[trim( $section_name )];
-						$wiki_page->addSection( $section_name, $page_section_in_form->getSectionLevel(), $section_text );
+
+						// $section_options will allow to pass additional options in the future without breaking backword compatibility
+						$section_options = array( 'hideIfEmpty' => $page_section_in_form->isHideIfEmpty() );
+						$wiki_page->addSection( $section_name, $page_section_in_form->getSectionLevel(), $section_text, $section_options );
 					}
 
 					$section_text = trim( $section_text );
@@ -1357,6 +1360,9 @@ END;
 
 			if ( $tif && ( !$tif->allowsMultiple() || $tif->allInstancesPrinted() ) ) {
 				$template_text = $wiki_page->createTemplateCallsForTemplateName( $tif->getTemplateName() );
+				// Escape the '$' characters for the preg_replace() call.
+				$template_text = str_replace( '$', '\$', $template_text );
+
 				// If there is a placeholder in the text, we
 				// know that we are doing a replace.
 				if ( $existing_page_content && strpos( $existing_page_content, '{{{insertionpoint}}}', 0 ) !== false ) {

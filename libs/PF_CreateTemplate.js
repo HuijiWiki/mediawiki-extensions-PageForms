@@ -1,3 +1,15 @@
+function toggleCargoInputs() {
+	if (jQuery('#use_cargo').prop('checked')) {
+		jQuery('#cargo_table_input').show('medium');
+		jQuery('label.cargo_field_type').show('medium');
+		jQuery('p.allowed_values_input').show('medium');
+	} else {
+		jQuery('#cargo_table_input').hide('medium');
+		jQuery('label.cargo_field_type').hide('medium');
+		jQuery('p.allowed_values_input').hide('medium');
+	}
+}
+
 var fieldNum = 1;
 function createTemplateAddField() {
 	fieldNum++;
@@ -20,10 +32,17 @@ function createTemplateAddField() {
 }
 
 function validateCreateTemplateForm() {
-	var templateName = jQuery( '#template_name' ).val();
-	if ( templateName === '' ) {
+	var blankTemplateName = ( jQuery( '#template_name' ).val() === '' );
+	var blankCargoTableName = ( jQuery( '#use_cargo' ).is(':checked') ||
+		jQuery( '#table_name' ).val() === '' );
+	if ( blankTemplateName || blankCargoTableName ) {
 		scroll( 0, 0 );
-		jQuery( '#template_name_p' ).append( '<span class="error">' + mediaWiki.msg( 'pf_blank_error' ) + '</span>' );
+		if ( blankTemplateName ) {
+			jQuery( '#template_name_p' ).append( ' <span class="error">' + mediaWiki.msg( 'pf_blank_error' ) + '</span>' );
+		}
+		if ( blankCargoTableName ) {
+			jQuery( '#cargo_table_input' ).append( ' <span class="error">' + mediaWiki.msg( 'pf_blank_error' ) + '</span>' );
+		}
 		return false;
 	} else {
 		return true;
@@ -31,6 +50,9 @@ function validateCreateTemplateForm() {
 }
 
 jQuery( document ).ready( function () {
+	jQuery( "#use_cargo" ).click( function() {
+		toggleCargoInputs();
+	} );
 	jQuery( ".createTemplateAddField" ).click( function () {
 		createTemplateAddField();
 	} );
