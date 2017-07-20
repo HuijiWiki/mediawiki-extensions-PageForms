@@ -98,36 +98,37 @@ class PFCreateTemplate extends SpecialPage {
 		$text .= "\t<table style=\"width: 100%;\"><tr><td>\n";
 		$text .= "\t<p><label>" . wfMessage( 'pf_createtemplate_fieldname' )->escaped() . ' ' .
 			Html::input( 'name_' . $id, null, 'text',
-				array( 'size' => '15' )
-			) . "</label>&nbsp;&nbsp;&nbsp;\n";
+				array( 'size' => '15', 'class' => 'createboxInput' )
+			) . "</label>\n";
 		$text .= "\t<label>" . wfMessage( 'pf_createtemplate_displaylabel' )->escaped() . ' ' .
 			Html::input( 'label_' . $id, null, 'text',
-				array( 'size' => '15' )
-			) . "</label>&nbsp;&nbsp;&nbsp;\n";
-
-		if ( defined( 'SMW_VERSION' ) ) {
+				array( 'size' => '15', 'class' => 'createboxInput' )
+			) . "</label>\n";
+		global $wgSite;
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$dropdown_html = self::printPropertiesComboBox( $all_properties, $id );
 			$text .= "\t<label>" . wfMessage( 'pf_createtemplate_semanticproperty' )->escaped() . ' ' . $dropdown_html . "</label></p>\n";
 		} elseif ( defined( 'CARGO_VERSION' ) ) {
 			$dropdown_html = self::printFieldTypeDropdown( $id );
 			$text .= "\t<label class=\"cargo_field_type\">" . wfMessage( 'pf_createproperty_proptype' )->escaped() . ' ' . $dropdown_html . "</label></p>\n";
 		}
-
-		$text .= "\t<p>" . '<label><input type="checkbox" name="is_list_' . $id . '" class="isList" /> ' . wfMessage( 'pf_createtemplate_fieldislist' )->escaped() . "</label>&nbsp;&nbsp;&nbsp;\n";
-		$text .= "\t" . '<label class="delimiter" style="display: none;">' . wfMessage( 'pf_createtemplate_delimiter' )->escaped() . ' ' .
-			Html::input( 'delimiter_' . $id, ',', 'text',
-				array( 'size' => '2' )
-			) . "</label>\n";
-		$text .= "\t</p>\n";
-		if ( !defined( 'SMW_VERSION' ) && defined( 'CARGO_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 || defined( 'CARGO_VERSION' )) {
+			$text .= "\t<p>" . '<label><input type="checkbox" name="is_list_' . $id . '" class="isList" /> ' . wfMessage( 'pf_createtemplate_fieldislist' )->escaped() . "</label>&nbsp;&nbsp;&nbsp;\n";
+			$text .= "\t" . '<label class="delimiter" style="display: none;">' . wfMessage( 'pf_createtemplate_delimiter' )->escaped() . ' ' .
+				Html::input( 'delimiter_' . $id, ',', 'text',
+					array( 'size' => '2', 'class' => 'createboxInput')
+				) . "</label>\n";
+			$text .= "\t</p>\n";
+		}
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
 			$text .= "\t<p>\n";
 			$text .= "\t<label class=\"allowed_values_input\">" . wfMessage( 'pf_createproperty_allowedvalsinput' )->escaped();
 			$text .= Html::input( 'allowed_values_' . $id, null, 'text',
-				array( 'size' => '80' ) ) . "</label>\n";
+				array( 'size' => '80', 'class' => 'createboxInput' ) ) . "</label>\n";
 			$text .= "\t</p>\n";
 		}
 		$text .= "\t</td><td>\n";
-		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField" />' . "\n";
+		$text .= "\t" . '<input type="button" value="' . wfMessage( 'pf_createtemplate_deletefield' )->escaped() . '" class="deleteField btn-danger" />' . "\n";
 
 		$text .= <<<END
 </td></tr></table>
@@ -149,8 +150,8 @@ END;
 	static function printTemplateStyleInput( $htmlFieldName, $curSelection = null ) {
 		if ( !$curSelection ) $curSelection = 'standard';
 		$text = "\t<p>" . wfMessage( 'pf_createtemplate_outputformat' )->escaped() . "\n";
-		$text .= self::printTemplateStyleButton( 'standard', 'pf_createtemplate_standardformat', $htmlFieldName, $curSelection );
 		$text .= self::printTemplateStyleButton( 'infobox', 'pf_createtemplate_infoboxformat', $htmlFieldName, $curSelection );
+		$text .= self::printTemplateStyleButton( 'standard', 'pf_createtemplate_standardformat', $htmlFieldName, $curSelection );
 		$text .= self::printTemplateStyleButton( 'plain', 'pf_createtemplate_plainformat', $htmlFieldName, $curSelection );
 		$text .= self::printTemplateStyleButton( 'sections', 'pf_createtemplate_sectionsformat', $htmlFieldName, $curSelection );
 		$text .= "</p>\n";
@@ -158,6 +159,7 @@ END;
 	}
 
 	function printCreateTemplateForm( $query ) {
+		global $wgSite;
 		$out = $this->getOutput();
 		$req = $this->getRequest();
 
@@ -240,19 +242,15 @@ END;
 				' <input size="25" id="template_name" name="template_name" /></p>' . "\n";
 		}
 		$text .= "\t<p>" . wfMessage( 'pf_createtemplate_categorylabel' )->escaped() . ' <input size="25" name="category" /></p>' . "\n";
-		if ( !defined( 'SMW_VERSION' ) && defined( 'CARGO_VERSION' ) ) {
-			$text .= "\t<p><label>" . Html::check( 'use_cargo', true, array( 'id' => 'use_cargo' ) ) .
-				' ' . wfMessage( 'pf_createtemplate_usecargo' )->escaped() . "</label></p>\n";
-			$text .= "\t<p id=\"cargo_table_input\"><label>" .
-				wfMessage( 'pf_createtemplate_cargotablelabel' )->escaped() .
-				' <input id="cargo_table" size="25" name="cargo_table" /></label></p>' . "\n";
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') !== 1 && defined( 'CARGO_VERSION' ) ) {
+			$text .= "\t<p>" . wfMessage( 'pf_createtemplate_cargotablelabel' )->escaped() . ' <input size="25" name="cargo_table" /></p>' . "\n";
 		}
 
 		$text .= "\t<fieldset>\n";
 		$text .= "\t" . Html::element( 'legend', null, wfMessage( 'pf_createtemplate_templatefields' )->text() ) . "\n";
 		$text .= "\t" . Html::element( 'p', null, wfMessage( 'pf_createtemplate_fieldsdesc' )->text() ) . "\n";
 
-		if ( defined( 'SMW_VERSION' ) ) {
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$all_properties = self::getAllPropertyNames();
 		} else {
 			$all_properties = array();
@@ -270,8 +268,8 @@ END;
 		);
 		$text .= Html::rawElement( 'p', null, $add_field_button ) . "\n";
 		$text .= "\t</fieldset>\n";
-
-		if ( defined( 'SMW_VERSION' ) ) {
+		
+		if ( $wgSite->getProperty('enable-semantic-mediawiki') === 1 ) {
 			$text .= "\t<fieldset>\n";
 			$text .= "\t" . Html::element( 'legend', null, wfMessage( 'pf_createtemplate_aggregation' )->text() ) . "\n";
 			$text .= "\t" . Html::element( 'p', null, wfMessage( 'pf_createtemplate_aggregationdesc' )->text() ) . "\n";

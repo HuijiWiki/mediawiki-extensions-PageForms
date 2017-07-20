@@ -694,8 +694,8 @@ END;
 
 			// 3 values per row, with alternating colors for rows
 			if ( $i % 3 == 0 ) {
-				$bgcolor = ( $i % 6 ) == 0 ? '#eee' : 'white';
-				$text .= "<div style=\"background: $bgcolor;\">";
+				$bgcolor = ( $i % 6 ) == 0 ? 'lighten' : '';
+				$text .= "<div class=\"$bgcolor\">";
 			}
 
 			$text .= "<div style=\"width: 30%; padding: 5px; float: left;\">\n<label>$paramName:\n";
@@ -739,8 +739,8 @@ END;
 
 			// 3 values per row, with alternating colors for rows
 			if ( $i % 3 == 0 ) {
-				$bgcolor = ( $i % 6 ) == 0 ? '#ecf0f6' : 'white';
-				$text .= "<div style=\"background: $bgcolor;\">";
+				$bgcolor = ( $i % 6 ) == 0 ? 'lighten' : '';
+				$text .= "<div class=\"$bgcolor\">";
 			}
 
 			$text .= "<div style=\"width: 30%; padding: 5px; float: left;\">\n<label>$paramName:\n";

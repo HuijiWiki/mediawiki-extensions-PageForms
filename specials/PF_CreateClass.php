@@ -204,7 +204,7 @@ class PFCreateClass extends SpecialPage {
 			return;
 		}
 
-		$specialBGColor = '#eeffcc';
+		$specialBGColor = 'lighten';
 		if ( defined( 'SMW_VERSION' ) ) {
 			$possibleTypes = $smwgContLang->getDatatypeLabels();
 		} elseif ( defined( 'CARGO_VERSION' ) ) {
@@ -292,7 +292,7 @@ END;
 			$text .= <<<END
 		<tr>
 			<th colspan="3" />
-			<th colspan="3" style="background: #ddeebb; padding: 4px;">$property_label</th>
+			<th colspan="3" class="darken" style="padding: 4px;">$property_label</th>
 		</tr>
 
 END;
@@ -309,7 +309,7 @@ END;
 		if ( defined( 'SMW_VERSION' ) ) {
 			$property_name_label = wfMessage( 'pf_createproperty_propname' )->escaped();
 			$text .= <<<END
-			<th style="background: $specialBGColor; padding: 4px;">$property_name_label</th>
+			<th class="$specialBGColor" style="padding: 4px;">$property_name_label</th>
 
 END;
 		}
@@ -364,7 +364,7 @@ END;
 			}
 			$text .= <<<END
 			</td>
-			<td style="background: $specialBGColor; padding: 4px;"><input type="text" size="25" name="allowed_values_$n" /></td>
+			<td class="$specialBGColor" style="padding: 4px;"><input type="text" size="25" name="allowed_values_$n" /></td>
 
 END;
 		}
