@@ -220,6 +220,7 @@ $GLOBALS['wgAutoloadClasses']['PFTree'] = __DIR__ . '/includes/forminputs/PF_Tre
 $GLOBALS['wgAutoloadClasses']['PFTokensInput'] = __DIR__ . '/includes/forminputs/PF_TokensInput.php';
 $GLOBALS['wgAutoloadClasses']['PFGoogleMapsInput'] = __DIR__ . '/includes/forminputs/PF_GoogleMapsInput.php';
 $GLOBALS['wgAutoloadClasses']['PFOpenLayersInput'] = __DIR__ . '/includes/forminputs/PF_OpenLayersInput.php';
+$GLOBALS['wgAutoloadClasses']['PFLeafletInput'] = __DIR__ . '/includes/forminputs/PF_LeafletInput.php';
 $GLOBALS['wgAutoloadClasses']['PFRegExpInput'] = __DIR__ . '/includes/forminputs/PF_RegExpInput.php';
 $GLOBALS['wgAutoloadClasses']['PFRatingInput'] = __DIR__ . '/includes/forminputs/PF_RatingInput.php';
 
@@ -277,6 +278,7 @@ $GLOBALS['wgResourceModules'] += array(
 			'pf_bad_email_error',
 			'pf_bad_number_error',
 			'pf_bad_date_error',
+			'pf_modified_input_error',
 			'pf_pipe_error',
 		),
 	),
@@ -582,6 +584,7 @@ $GLOBALS['wgPageFormsUseDisplayTitle'] = false;
 // Other variables
 $GLOBALS['wgPageFormsSimpleUpload'] = false;
 $GLOBALS['wgPageFormsDisableOutsideServices'] = false;
+$GLOBALS['wgPageFormsMapsWithFeeders'] = array();
 
 # ##
 # Global variables for Javascript

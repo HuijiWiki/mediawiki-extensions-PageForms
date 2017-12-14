@@ -900,6 +900,7 @@ class PFAutoeditAPI extends ApiBase {
 				$wgPageFormsFormPrinter->formHTML(
 					$formContent, $isFormSubmitted, $pageExists, $formArticleId, $preloadContent, $targetName, $targetNameFormula
 				);
+			$formHtmlHasRun = true;
 
 			// Parse the data to be preloaded from the form HTML of
 			// the existing page.
