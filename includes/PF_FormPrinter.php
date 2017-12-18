@@ -1544,7 +1544,7 @@ END;
 
 			$form_text .= Html::hidden( 'wpEditToken', $wgUser->getEditToken() );
 		}
-
+		$form_text .= Html::hidden( 'wpUnicodeCheck', EditPage::UNICODE_CHECK );
 		$form_text .= "\t</form>\n";
 		$wgParser->replaceLinkHolders( $form_text );
 		Hooks::run( 'PageForms::RenderingEnd', array( &$form_text ) );
