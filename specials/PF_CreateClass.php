@@ -42,7 +42,7 @@ class PFCreateClass extends SpecialPage {
 			$form_name = trim( $req->getVal( "form_name" ) );
 			$category_name = trim( $req->getVal( "category_name" ) );
 		}
-		if ( $template_name === '' || ( !$template_multiple && ( $form_name === '' || $category_name === '' ) ) ||
+		if ( $template_name === '' || ( !$template_multiple && $form_name === '' ) ||
 			( $use_cargo && ( $cargo_table === '' ) ) ) {
 			$out->addWikiMsg( 'pf_createclass_missingvalues' );
 			return;
@@ -59,6 +59,7 @@ class PFCreateClass extends SpecialPage {
 			$property_type = $req->getVal( "property_type_$i" );
 			$allowed_values = $req->getVal( "allowed_values_$i" );
 			$is_list = $req->getCheck( "is_list_$i" );
+			$is_hierarchy = $req->getCheck( "is_hierarchy_$i" );
 			// Create an PFTemplateField object based on these
 			// values, and add it to the $fields array.
 			$field = PFTemplateField::create( $field_name, $field_name, $property_name, $is_list );
@@ -67,7 +68,11 @@ class PFCreateClass extends SpecialPage {
 				// Hopefully it's safe to use a Cargo
 				// utility method here.
 				$possibleValues = CargoUtils::smartSplit( ',', $allowed_values );
-				$field->setPossibleValues( $possibleValues );
+				if ( $is_hierarchy ) {
+					$field->setHierarchyStructure( $req->getVal( 'hierarchy_structure_' . $i ) );
+				} else {
+					$field->setPossibleValues( $possibleValues );
+				}
 				if ( $use_cargo ) {
 					$field->setFieldType( $property_type );
 					$field->setPossibleValues( $possibleValues );
@@ -88,13 +93,13 @@ class PFCreateClass extends SpecialPage {
 				$params = array();
 				$params['user_id'] = $user->getId();
 				$params['page_text'] = $full_text;
-				$params['edit_summary'] = wfMessage( 'pf_createproperty_editsummary', $property_type)->inContentLanguage()->text();
+				$params['edit_summary'] = wfMessage( 'pf_createproperty_editsummary', $property_type )->inContentLanguage()->text();
 				$jobs[] = new PFCreatePageJob( $property_title, $params );
 			}
 		}
 
 		// Also create the "connecting property", if there is one.
-		$connectingProperty = trim( $req->getVal('connecting_property') );
+		$connectingProperty = trim( $req->getVal( 'connecting_property' ) );
 		if ( defined( 'SMW_VERSION' ) && $connectingProperty != '' ) {
 			global $smwgContLang;
 			$datatypeLabels = $smwgContLang->getDatatypeLabels();
@@ -104,7 +109,7 @@ class PFCreateClass extends SpecialPage {
 			$params = array();
 			$params['user_id'] = $user->getId();
 			$params['page_text'] = $full_text;
-			$params['edit_summary'] = wfMessage( 'pf_createproperty_editsummary', $property_type)->inContentLanguage()->text();
+			$params['edit_summary'] = wfMessage( 'pf_createproperty_editsummary', $property_type )->inContentLanguage()->text();
 			$jobs[] = new PFCreatePageJob( $property_title, $params );
 		}
 
@@ -230,7 +235,7 @@ class PFCreateClass extends SpecialPage {
 		$creation_links[] = PFUtils::linkForSpecialPage( $linkRenderer, 'CreateForm' );
 		$creation_links[] = PFUtils::linkForSpecialPage( $linkRenderer, 'CreateCategory' );
 
-		$text = '<form action="" method="post">' . "\n";
+		$text = '<form id="createClassForm" action="" method="post">' . "\n";
 		$text .= "\t" . Html::rawElement( 'p', null,
 				wfMessage( 'pf_createclass_docu' )
 					->rawParams( $wgLang->listToText( $creation_links ) )
@@ -265,7 +270,7 @@ class PFCreateClass extends SpecialPage {
 		global $smwgDefaultStore;
 		if ( defined( 'SIO_VERSION' ) || $smwgDefaultStore == "SMWSQLStore3" ) {
 			$templateInfo .= Html::rawElement( 'div',
-				array (
+				array(
 					'id' => 'connecting_property_div',
 					'style' => 'display: none;',
 				),
@@ -324,7 +329,17 @@ END;
 		$allowed_values_label = wfMessage( 'pf_createclass_allowedvalues' )->escaped();
 		$text .= <<<END
 			<th style="background: $specialBGColor; padding: 4px;">$allowed_values_label</th>
-		</tr>
+
+END;
+		if ( defined( 'CARGO_VERSION' ) ) {
+			$is_hierarchy_label = wfMessage( 'pf_createclass_ishierarchy' )->escaped();
+			$text .= <<<END
+			<th style="background: $specialBGColor; padding: 4px;">$is_hierarchy_label</th>
+
+END;
+		}
+		$text .= <<<END
+			</tr>
 
 END;
 		// Make one more row than what we're displaying - use the
@@ -361,12 +376,28 @@ END;
 					$typeDropdownBody .= "\t\t\t\t<option>$typeName</option>\n";
 				}
 				$text .= "\t\t\t\t" . Html::rawElement( 'select', array( 'name' => "property_type_$n" ), $typeDropdownBody ) . "\n";
+				$text .= "</td>";
+			}
+
+			$text .= <<<END
+			<td style="background: $specialBGColor; padding: 4px;">
+			<input type="text" size="25" name="allowed_values_$n" />
+END;
+			if ( defined( 'CARGO_VERSION' ) ) {
+				$text .= <<<END
+				<textarea class="hierarchy_structure" rows="10" cols="20" name="hierarchy_structure_$n" style="display: none;"></textarea>
+END;
 			}
 			$text .= <<<END
 			</td>
 			<td class="$specialBGColor" style="padding: 4px;"><input type="text" size="25" name="allowed_values_$n" /></td>
 
 END;
+			if ( defined( 'CARGO_VERSION' ) ) {
+				$text .= <<<END
+				<td style="text-align: center;"><input type="checkbox" name="is_hierarchy_$n" /></td>
+END;
+			}
 		}
 		$text .= <<<END
 		</tr>
